@@ -1,0 +1,94 @@
+<!-- Services Section -->
+<section class="py-20 px-6 bg-gray-50">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center my-16">
+      <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Services we offer</h2>
+    </div>
+
+    <div class="relative overflow-hidden py-5">
+
+      <div class="md:w-100 flex transition-transform duration-500 ease-in-out"
+        [style.transform]="'translateX(-' + (currentSlide() * 100) + '%)'">
+        @for (service of services(); track service.id) {
+        <div class="w-full flex-shrink-0 px-3">
+          <div class="service-card" [class.active]="service.isActive">
+            <div class="service-icon" [class.active]="service.isActive">
+              @if (service.icon === "</>") {
+              <div class="code-icon">
+                <span class="text-2xl font-bold text-white">&lt;/&gt;</span>
+              </div>
+              } @else if (service.icon === "📱") {
+              <div class="mobile-icon">
+                <div class="grid grid-cols-3 gap-1">
+                  <div class="w-2 h-2 bg-orange-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-green-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-blue-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-red-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-purple-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-yellow-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-pink-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-indigo-400 rounded-sm"></div>
+                  <div class="w-2 h-2 bg-teal-400 rounded-sm"></div>
+                </div>
+              </div>
+              } @else if (service.icon === "🧪") {
+              <div class="test-icon">
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <span class="text-white text-xs">✓</span>
+                  </div>
+                </div>
+              </div>
+              } @else {
+              <span class="text-3xl">{{ service.icon }}</span>
+              }
+            </div>
+            <h3 class="service-title" [class.active]="service.isActive">
+              {{ service.title }}
+            </h3>
+            <p class="service-description">
+              {{ service.description }}
+            </p>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+
+
+
+
+    <!-- Navigation Arrows -->
+    <div class="flex justify-center items-center mt-8 space-x-4">
+      <button class="p-2 cursor-pointer rounded-full bg-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+        (click)="previousSlide()" [disabled]="currentSlide() === 0">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <button class="p-2 cursor-pointer rounded-full bg-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+        (click)="nextSlide()" [disabled]="currentSlide() === services().length - 1">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Pagination Dots -->
+    <div class="flex justify-center items-center mt-8 space-x-3">
+      @for (dot of [0,1,2,3,4]; track $index; let i = $index) {
+      <button class="pagination-dot" [class.active]="currentSlide() === i" (click)="goToSlide(i)">
+      </button>
+      }
+    </div>
+
+    <!-- Page Counter -->
+    <div class="flex justify-center items-center mt-8 space-x-2">
+      <span class="text-indigo-600 font-bold text-lg">{{ (currentSlide() + 1).toString().padStart(2, '0') }}</span>
+      <div class="w-8 h-0.5 bg-indigo-600"></div>
+      <span class="text-gray-400 font-bold text-lg">{{ services().length.toString().padStart(2, '0') }}</span>
+    </div>
+  </div>
+</section>

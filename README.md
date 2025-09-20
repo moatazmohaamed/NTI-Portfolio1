@@ -1,2 +1,2 @@
-# NTI-Portfolio1
+# NTI-Portfolio
 Full stack portfolio with CMS
