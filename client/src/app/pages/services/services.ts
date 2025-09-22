@@ -1,102 +1,71 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
-interface Service {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  isActive?: boolean;
-}
+import { Services } from '../../core/services/services/services';
+import { Data, IServices } from '../../core/interfaces/IServices';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-services',
   imports: [CommonModule, RouterModule],
   templateUrl: './services.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ServicesComponent {
+export class ServicesComponent implements OnInit {
   currentSlide = signal(0);
+  services = signal<Data[]>([]);
 
-  services = signal<Service[]>([
-    {
-      id: 1,
-      title: 'Mobile App Development',
-      description: 'A Website is an extension of yourself and we can help you to express it properly. Your website is your number one marketing asset because we live in a digital age.',
-      icon: '📱',
-      isActive: false
-    },
-    {
-      id: 2,
-      title: 'Web Design & Development',
-      description: 'A Website is an extension of yourself and we can help you to express it properly. Your website is your number one marketing asset because we live in a digital age.',
-      icon: '</>',
-      isActive: true
-    },
-    {
-      id: 3,
-      title: 'Software Testing Service',
-      description: 'A Website is an extension of yourself and we can help you to express it properly. Your website is your number one marketing asset because we live in a digital age.',
-      icon: '🧪',
-      isActive: false
-    },
-    {
-      id: 4,
-      title: 'UI/UX Design',
-      description: 'A Website is an extension of yourself and we can help you to express it properly. Your website is your number one marketing asset because we live in a digital age.',
-      icon: '🎨',
-      isActive: false
-    },
-    {
-      id: 5,
-      title: 'DevOps & Cloud',
-      description: 'A Website is an extension of yourself and we can help you to express it properly. Your website is your number one marketing asset because we live in a digital age.',
-      icon: '☁️',
-      isActive: false
-    },
-    {
-      id: 6,
-      title: 'Cyper Security',
-      description: 'A Website is an extension of yourself and we can help you to express it properly. Your website is your number one marketing asset because we live in a digital age.',
-      icon: '☁️',
-      isActive: false
-    },
-
-
-  ]);
-
-  constructor() {
-    this.updateActiveService();
+  constructor(private servicesService: Services) {
+    // Don't call updateActiveService here as services array is empty initially
   }
 
+  ngOnInit() {
+    this.servicesService.getServices().subscribe({
+      next: (res) => {
+        this.services.set(res.data);
+        this.updateActiveService(); // Call this after services are loaded
+        console.log(res.data);
+      },
+    });
+  }
 
   nextSlide() {
     const maxSlide = this.services().length - 1;
     if (this.currentSlide() < maxSlide) {
-      this.currentSlide.update(current => current + 1);
+      this.currentSlide.update((current) => current + 1);
       this.updateActiveService();
     }
   }
 
   previousSlide() {
     if (this.currentSlide() > 0) {
-      this.currentSlide.update(current => current - 1);
+      this.currentSlide.update((current) => current - 1);
       this.updateActiveService();
     }
   }
 
+  prevSlide() {
+    this.previousSlide();
+  }
+
   goToSlide(index: number) {
-    this.currentSlide.set(index);
-    this.updateActiveService();
+    // Add safety check to ensure index is within bounds
+    if (index >= 0 && index < this.services().length) {
+      this.currentSlide.set(index);
+      this.updateActiveService();
+    }
   }
 
   private updateActiveService() {
-    this.services.update(services =>
+    this.services.update((services) =>
       services.map((service, index) => ({
         ...service,
-        isActive: index === this.currentSlide()
+        isActive: index === this.currentSlide(),
       }))
     );
+  }
+
+  getProjectImageUrl(image: string): string {
+    return `${environment.imageUrl}${image}`;
   }
 }

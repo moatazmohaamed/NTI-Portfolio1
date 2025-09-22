@@ -9,6 +9,8 @@ const teamRoute = require("./routes/teamRoute");
 const testimonialsRoute = require("./routes/testimonialsRoute");
 const contactFormRoute = require("./routes/contactFormRoute");
 const categoryRoute = require("./routes/categoryRoute");
+const servicesRoute = require("./routes/servicesRoute");
+
 
 app.use(
   cors({
@@ -26,5 +28,6 @@ app.use("/api/team-members", teamRoute);
 app.use("/api/testimonials", testimonialsRoute);
 app.use("/api/contact", contactFormRoute);
 app.use("/api/categories", categoryRoute);
+app.use("/api/services", servicesRoute);
 
 module.exports = app;

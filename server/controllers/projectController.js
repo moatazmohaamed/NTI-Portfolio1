@@ -1,4 +1,6 @@
 const Project = require('../models/project.model');
+const Category = require("../models/category.model.js")
+
 const features = require('../utils/api.features.js');
 
 const getAllProjects = async (req, res) => {
@@ -34,14 +36,28 @@ const addProject = async (req, res) => {
         const image = req.file ? req.file.filename : null;
         const {
             technologies,
-            client
+            client,
+            category
         } = req.body;
+
+        const categoryDoc = await Category.findOne({
+            name: category
+        });
+
+        if (!categoryDoc) {
+            return res.status(400).json({
+                message: "Invalid category"
+            });
+        }
+
         const projectData = {
             ...req.body,
             technologies: JSON.parse(technologies || '[]'),
             client: client ? JSON.parse(client) : {},
-            image
+            image,
+            category: categoryDoc._id
         };
+
         const newProject = await Project.create(projectData);
         res.status(201).json({
             success: true,
@@ -79,13 +95,27 @@ const updateProject = async (req, res) => {
         const image = req.file ? req.file.filename : null;
         const {
             technologies,
-            client
+            client,
+            category,
+            ...projectData
         } = req.body;
-        const projectData = {
-            ...req.body,
-            technologies: JSON.parse(technologies || '[]'),
-            client: client ? JSON.parse(client) : {},
-        };
+
+        if (technologies) projectData.technologies = JSON.parse(technologies);
+        if (client) projectData.client = JSON.parse(client);
+
+        if (category) {
+            const categoryDoc = await Category.findOne({
+                slug: category
+            });
+            if (!categoryDoc) {
+                return res.status(400).json({
+                    message: "Invalid category"
+                });
+            }
+            projectData.category = categoryDoc._id;
+        }
+
+
         if (image) projectData.image = image;
         const updatedProject = await Project.findByIdAndUpdate(req.params.id, projectData, {
             new: true,

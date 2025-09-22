@@ -11,8 +11,8 @@ export class Projects {
   private apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
 
-  getProjects(): Observable<ProjectsResponse> {
-    return this.http.get<ProjectsResponse>(`${this.apiUrl}/projects`);
+  getProjects(page: number = 1, limit: number = 6): Observable<ProjectsResponse> {
+    return this.http.get<ProjectsResponse>(`${this.apiUrl}/projects?page=${page}&limit=${limit}`);
   }
 
   getCategories(): Observable<CategoriesResponse> {

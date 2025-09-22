@@ -26,7 +26,9 @@ A robust Node.js backend for a full-stack company portfolio application, built w
 
 ## API Endpoints
 
-### FAQ
+### FAQ -> question and answer only
+
+### Companys worked with images -> image only
 
 ### Authentication --> Future done
 

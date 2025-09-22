@@ -85,4 +85,9 @@ projectSchema.pre('save', function (next) {
 
 const Project = mongoose.model('Project', projectSchema);
 
+Project.syncIndexes().then(() => {
+    console.log(`synced`);
+});
+
+
 module.exports = Project;

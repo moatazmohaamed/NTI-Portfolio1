@@ -24,17 +24,35 @@ export class Projects implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string>('');
 
+  currentPage = signal<number>(1);
+  itemsPerPage = signal<number>(5);
+  totalItems = signal<number>(0);
+  totalPages = signal<any>(1);
+
+  pageNumbers = signal<number[]>([]);
+
   ngOnInit(): void {
     this.loadData();
   }
 
-  loadData(): void {
+  loadData(page: number = 1): void {
     this.loading.set(true);
+    this.currentPage.set(page);
 
-    this.projectsService.getProjects().subscribe({
+    this.projectsService.getProjects(page, this.itemsPerPage()).subscribe({
       next: (response: ProjectsResponse) => {
         this.projects.set(response.data);
         this.filteredProjects.set(response.data);
+        this.totalItems.set(response.results);
+        const totalPagesCount = Math.ceil(response.results / this.itemsPerPage());
+        this.totalPages.set(totalPagesCount);
+
+        const pages = [];
+        for (let i = 1; i <= totalPagesCount; i++) {
+          pages.push(i);
+        }
+        this.pageNumbers.set(pages);
+
         this.loading.set(false);
       },
       error: (error) => {
@@ -57,6 +75,11 @@ export class Projects implements OnInit {
   filterByCategory(categorySlug: string): void {
     this.selectedCategory.set(categorySlug);
 
+    if (this.currentPage() !== 1) {
+      this.loadData(1);
+      return;
+    }
+
     if (categorySlug === 'all') {
       this.filteredProjects.set(this.projects());
     } else {
@@ -67,5 +90,22 @@ export class Projects implements OnInit {
 
   getProjectImageUrl(image: string): string {
     return `http://localhost:5000/uploads/${image}`;
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages()) return;
+    this.loadData(page);
+  }
+
+  previousPage(): void {
+    if (this.currentPage() > 1) {
+      this.goToPage(this.currentPage() - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.goToPage(this.currentPage() + 1);
+    }
   }
 }

@@ -1,7 +1,5 @@
-<!-- Projects Section -->
-<section class="py-20 px-6 bg-gray-50 min-h-screen">
+<section class="py-20 px-6 bg-gray-50 min-h-screen relative overflow-hidden">
   <div class="max-w-7xl mx-auto">
-    <!-- Header -->
     <div class="text-center my-12 sm:mb-16">
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Recent Work</h1>
       <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
@@ -26,15 +24,15 @@
     }
 
     @if (!loading() && !error()) {
-    <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 category-nav">
+    <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 category-nav ">
       <button (click)="filterByCategory('all')"
-        [class]="selectedCategory() === 'all' ? 'active-nav' : 'px-4 sm:px-6 py-2 sm:py-3 bg-white text-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-50 text-sm sm:text-base'">
+        [class]="selectedCategory() === 'all' ? 'active-nav cursor-pointer' : 'cursor-pointer px-4 sm:px-6 py-2 sm:py-3 bg-white text-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-50 text-sm sm:text-base'">
         All Projects
       </button>
 
       @for (category of categories(); track category._id) {
       <button (click)="filterByCategory(category.slug)"
-        [class]="selectedCategory() === category.slug ? 'active-nav' : 'px-4 sm:px-6 py-2 sm:py-3 bg-white text-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-50 text-sm sm:text-base'">
+        [class]="selectedCategory() === category.slug ? 'active-nav' : 'px-4 cursor-pointer sm:px-6 py-2 sm:py-3 bg-white text-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-50 text-sm sm:text-base'">
         {{ category.name }}
       </button>
       }
@@ -70,7 +68,7 @@
             </span>
             } @else {
             <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-              {{ project.status || 'Unknown' }}
+              {{ project.status || '---' }}
             </span>
             }
           </div>
@@ -151,12 +149,13 @@
       </button>
     </div>
     }
+
+    <!-- Here add the pagination and fix the limit where it has only 4 pages and when there is a project on 5 it doesnt apear event its alone in the cat -->
     }
   </div>
 
-
   <div
-    class="absolute -bottom-32 -right-32 w-96 h-96 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-full blur-3xl">
+    class="absolute  -bottom-32 -right-32 w-96 h-96 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-full blur-3xl">
   </div>
   <div
     class="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-full blur-3xl">
